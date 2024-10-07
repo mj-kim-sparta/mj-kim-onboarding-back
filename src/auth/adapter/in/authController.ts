@@ -14,20 +14,26 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
     @Post('/login')
     async login(@Body() dto: LoginDto, @Res() res: Response) {
+        console.log("try login with", dto);
         const result = await this.authService.verifyUser(dto);
         if (result.result === "success") {
-            res.cookie('accessToken', result.tokens.accessToken, { httpOnly: true,  domain: ".spartacodingclub.kr", maxAge: 1000 * 60 * 60 });
-            res.cookie('refreshToken', result.tokens.refreshToken, { httpOnly: true,  domain: ".spartacodingclub.kr", maxAge: 1000 * 60 * 60 * 24 });
+            console.log("login success");
+            // res.cookie('accessToken', result.tokens.accessToken, { httpOnly: true, maxAge: 1000 * 60 * 60 });
+            // res.cookie('refreshToken', result.tokens.refreshToken, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 });
             return res.send({
-                ok: true
+                ok: true,
+                message: "로그인 성공",
+                accessToken: result.tokens.accessToken,
+                refreshToken: result.tokens.refreshToken
             });
         }
         else {
+            console.log("login failed", result.message);
             return res.status(401).json({ message: result.message });
         }
     }
 
-    // 로그인이 필요한 어떤 기능의 예시: 로그아웃
+    /*
     @Post('/logout')
     async logout(@Req() req: Request, @Res() res: Response, @Body() dto: LogoutDto, @Auth() auth: AuthResult) {
         let accessToken = "";
@@ -46,9 +52,5 @@ export class AuthController {
         }
         return res.status(401).json({ message: "Invalid credentials" });
     }
-
-    @Post ('/need-auth')
-    async whatever(@Req() req: Request, @Res() res: Response , @Auth() auth: AuthResult) {
-        return res.send(auth);
-    }
+    */
 }

@@ -39,8 +39,8 @@ export class AuthService {
         // db에서 이메일 검색하고 password와 대조
         const user = await this.userData.findUser(email);
         if (user && bcrypt.compareSync(password, user.password)) {
-            const accessTokenPayload = { "id": "1234567890" , "name": "valid access token", "exp": Date.now() + 1000 * 60 * 30};
-            const refreshTokenPayload = { "id": "1234567890" , "name": "valid refresh token", "exp": Date.now() + 1000 * 60 * 60 * 24 };
+            const accessTokenPayload = { "id": "1234567890" , "name": "user", "exp": Date.now() + 1000 * 60 * 30};
+            const refreshTokenPayload = { "id": "1234567890" , "name": "user", "exp": Date.now() + 1000 * 60 * 60 * 24 };
             const accessToken = this.jwtService.sign(accessTokenPayload, {secret: secretKey});
             const refreshToken = this.jwtService.sign(refreshTokenPayload, {secret: secretKey});
             // console.log(accessToken);
@@ -50,7 +50,7 @@ export class AuthService {
             return {result: "fail", message: "wrong email or password", tokens: null};
         }
     };
-/*
+
     verifyToken = (tokens: TokensDto) => {
         // 토큰 검증 로직
         try {
@@ -76,5 +76,5 @@ export class AuthService {
         }
         return {result: "fail", message: "auth failed"};
     };
-*/
+
 }
